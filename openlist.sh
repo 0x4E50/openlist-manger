@@ -1768,12 +1768,12 @@ check_docker_installed() {
 
 # 通过镜像名查找 OpenList 容器ID
 find_openlist_container() {
-    docker ps -a --format '{{.ID}} {{.Image}} {{.Names}}' | grep "ghcr.io/openlistteam/openlist:$DOCKER_IMAGE_TAG" | awk '{print $1}' | head -n1
+    docker ps -a --format '{{.ID}} {{.Image}} {{.Names}}' | grep "openlistteam/openlist:$DOCKER_IMAGE_TAG" | awk '{print $1}' | head -n1
 }
 
 # 通过镜像名查找 OpenList 容器名称
 find_openlist_container_name() {
-    docker ps -a --format '{{.ID}} {{.Image}} {{.Names}}' | grep "ghcr.io/openlistteam/openlist:$DOCKER_IMAGE_TAG" | awk '{print $3}' | head -n1
+    docker ps -a --format '{{.ID}} {{.Image}} {{.Names}}' | grep "openlistteam/openlist:$DOCKER_IMAGE_TAG" | awk '{print $3}' | head -n1
 }
 
 # 拉取镜像并运行容器
@@ -1781,7 +1781,7 @@ install_openlist_docker() {
     select_docker_image_tag
     check_docker_installed
     echo -e "${BLUE_COLOR}拉取 OpenList 镜像...${RES}"
-    docker pull ghcr.io/openlistteam/openlist:$DOCKER_IMAGE_TAG || handle_error 1 "镜像拉取失败"
+    docker pull openlistteam/openlist:$DOCKER_IMAGE_TAG || handle_error 1 "镜像拉取失败"
     # 检查是否已存在容器
     local cid=$(find_openlist_container)
     if [ -n "$cid" ]; then
@@ -1789,7 +1789,7 @@ install_openlist_docker() {
         docker start $(find_openlist_container_name)
     else
         echo -e "${BLUE_COLOR}创建并启动 OpenList 容器...${RES}"
-        docker run -d --name openlist -p 5244:5244 --restart unless-stopped ghcr.io/openlistteam/openlist:$DOCKER_IMAGE_TAG || handle_error 1 "容器启动失败"
+        docker run -d --name openlist -p 5244:5244 --restart unless-stopped openlistteam/openlist:$DOCKER_IMAGE_TAG || handle_error 1 "容器启动失败"
     fi
     echo -e "${GREEN_COLOR}OpenList Docker 容器已启动 (镜像: $DOCKER_IMAGE_TAG)${RES}"
     sleep 2
@@ -1843,7 +1843,7 @@ status_openlist_docker() {
     echo -e "${BLUE_COLOR}所有 OpenList 相关容器状态：${RES}"
     local found=0
     docker ps -a --format '状态: {{.Status}}  名称: {{.Names}}  镜像: {{.Image}}  端口: {{.Ports}}  创建时间: {{.CreatedAt}}' | \
-    grep -E 'ghcr.io/openlistteam/openlist:(latest|latest-ffmpeg|latest-aio|latest-aria2)' && found=1
+    grep -E 'openlistteam/openlist:(latest|latest-ffmpeg|latest-aio|latest-aria2)' && found=1
     if [ $found -eq 0 ]; then
         echo -e "${YELLOW_COLOR}未找到任何 OpenList 官方镜像容器${RES}"
     fi
@@ -1877,7 +1877,7 @@ is_docker_installed() {
 
 # 检查 OpenList Docker 容器是否已安装
 is_openlist_docker_installed() {
-    local count=$(docker ps -a --format '{{.Image}}' 2>/dev/null | grep -E 'ghcr.io/openlistteam/openlist:(latest|latest-ffmpeg|latest-aio|latest-aria2)' | wc -l)
+    local count=$(docker ps -a --format '{{.Image}}' 2>/dev/null | grep -E 'openlistteam/openlist:(latest|latest-ffmpeg|latest-aio|latest-aria2)' | wc -l)
     if [ "$count" -gt 0 ]; then
         echo -e "${GREEN_COLOR}OpenList Docker 容器已安装${RES}"
         return 0
@@ -2237,13 +2237,13 @@ non_interactive_update() {
             return 1
         fi
         log_debug "开始自动更新 Docker 容器"
-        docker pull ghcr.io/openlistteam/openlist:latest
+        docker pull openlistteam/openlist:latest
         log_debug "已拉取镜像，返回码: $?"
         docker stop "$cname"
         log_debug "已停止容器，返回码: $?"
         docker rm "$cname"
         log_debug "已删除容器，返回码: $?"
-        docker run -d --name openlist -p 5244:5244 --restart unless-stopped ghcr.io/openlistteam/openlist:latest
+        docker run -d --name openlist -p 5244:5244 --restart unless-stopped openlistteam/openlist:latest
         log_debug "已创建新容器，返回码: $?"
         log_debug "Docker 自动更新成功"
         return 0
