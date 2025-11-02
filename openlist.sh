@@ -29,7 +29,7 @@ log_debug() {
 
 # 配置部分
 GITHUB_REPO="OpenListTeam/OpenList"
-VERSION_TAG="beta"
+VERSION_TAG="latest"
 VERSION_FILE="/opt/openlist/.version"
 MANAGER_VERSION="1.8.3"  # 每次更新脚本都要更新管理器版本号
 
@@ -480,36 +480,36 @@ get_service_logs() {
 }
 
 # ===================== Docker 镜像标签选择 =====================
-DOCKER_IMAGE_TAG="beta"
+DOCKER_IMAGE_TAG="latest"
 
 select_docker_image_tag() {
     echo -e "${BLUE_COLOR}请选择要使用的 OpenList Docker 镜像标签：${RES}"
-    echo -e "${GREEN_COLOR}1${RES} - beta-ffmpeg"
-    echo -e "${GREEN_COLOR}2${RES} - beta-aio"
-    echo -e "${GREEN_COLOR}3${RES} - beta-aria2"
-    echo -e "${GREEN_COLOR}4${RES} - beta (默认)"
+    echo -e "${GREEN_COLOR}1${RES} - latest-ffmpeg"
+    echo -e "${GREEN_COLOR}2${RES} - latest-aio"
+    echo -e "${GREEN_COLOR}3${RES} - latest-aria2"
+    echo -e "${GREEN_COLOR}4${RES} - latest (默认)"
     echo -e "${GREEN_COLOR}5${RES} - 手动输入标签"
     echo
     read -r -p "请输入选项 [1-5] (默认4): " tag_choice < /dev/tty
     case "$tag_choice" in
         1)
-            DOCKER_IMAGE_TAG="beta-ffmpeg";;
+            DOCKER_IMAGE_TAG="latest-ffmpeg";;
         2)
-            DOCKER_IMAGE_TAG="beta-aio";;
+            DOCKER_IMAGE_TAG="latest-aio";;
         3)
-            DOCKER_IMAGE_TAG="beta-aria2";;
+            DOCKER_IMAGE_TAG="latest-aria2";;
         4|"")
-            DOCKER_IMAGE_TAG="beta";;
+            DOCKER_IMAGE_TAG="latest";;
         5)
             read -r -p "请输入自定义标签: " custom_tag < /dev/tty
             if [ -n "$custom_tag" ]; then
                 DOCKER_IMAGE_TAG="$custom_tag"
             else
-                DOCKER_IMAGE_TAG="beta"
+                DOCKER_IMAGE_TAG="latest"
             fi
             ;;
         *)
-            DOCKER_IMAGE_TAG="beta";;
+            DOCKER_IMAGE_TAG="latest";;
     esac
     echo -e "${GREEN_COLOR}已选择镜像标签: $DOCKER_IMAGE_TAG${RES}"
 }
@@ -672,7 +672,7 @@ get_available_versions() {
         echo "$versions" | head -10
         return 0
     else
-        echo -e "${YELLOW_COLOR}无法获取版本信息，将使用默认 beta 版本${RES}"
+        echo -e "${YELLOW_COLOR}无法获取版本信息，将使用默认 latest 版本${RES}"
         return 1
     fi
 }
@@ -680,7 +680,7 @@ get_available_versions() {
 # 选择版本
 select_version() {
     echo -e "${PURPLE_COLOR}请选择要使用的版本：${RES}"
-    echo -e "${GREEN_COLOR}1${RES} - beta (推荐，最新功能)"
+    echo -e "${GREEN_COLOR}1${RES} - latest (推荐，最新功能)"
     echo -e "${GREEN_COLOR}2${RES} - 查看所有可用版本"
     echo -e "${GREEN_COLOR}3${RES} - 手动输入版本标签"
     echo -e "${GREEN_COLOR}4${RES} - 返回主菜单"
@@ -690,8 +690,8 @@ select_version() {
         version_choice=$(default_read "请输入选项 [1-4] (默认1): " "1")
         case "$version_choice" in
             1)
-                VERSION_TAG="beta"
-                echo -e "${GREEN_COLOR}已选择 beta 版本${RES}"
+                VERSION_TAG="latest"
+                echo -e "${GREEN_COLOR}已选择 latest 版本${RES}"
                 break
                 ;;
             2)
@@ -699,29 +699,29 @@ select_version() {
                 if get_available_versions; then
                     echo
                     local custom_version
-                    custom_version=$(default_read "请输入要使用的版本标签 (默认beta): " "beta")
+                    custom_version=$(default_read "请输入要使用的版本标签 (默认latest): " "latest")
                     if [ ! -z "$custom_version" ]; then
                         VERSION_TAG="$custom_version"
                         echo -e "${GREEN_COLOR}已选择版本：$VERSION_TAG${RES}"
                     else
-                        VERSION_TAG="beta"
-                        echo -e "${YELLOW_COLOR}输入为空，使用 beta 版本${RES}"
+                        VERSION_TAG="latest"
+                        echo -e "${YELLOW_COLOR}输入为空，使用 latest 版本${RES}"
                     fi
                 else
-                    VERSION_TAG="beta"
-                    echo -e "${YELLOW_COLOR}获取版本失败，使用 beta 版本${RES}"
+                    VERSION_TAG="latest"
+                    echo -e "${YELLOW_COLOR}获取版本失败，使用 latest 版本${RES}"
                 fi
                 break
                 ;;
             3)
                 local custom_version
-                custom_version=$(default_read "请输入版本标签 (如: beta, v1.0.0，默认beta): " "beta")
+                custom_version=$(default_read "请输入版本标签 (如: latest, v1.0.0，默认latest): " "latest")
                 if [ ! -z "$custom_version" ]; then
                     VERSION_TAG="$custom_version"
                     echo -e "${GREEN_COLOR}已选择版本：$VERSION_TAG${RES}"
                 else
-                    VERSION_TAG="beta"
-                    echo -e "${YELLOW_COLOR}输入为空，使用 beta 版本${RES}"
+                    VERSION_TAG="latest"
+                    echo -e "${YELLOW_COLOR}输入为空，使用 latest 版本${RES}"
                 fi
                 break
                 ;;
@@ -1038,14 +1038,14 @@ update_openlist() {
                     VERSION_TAG="$latest_release"
                     echo -e "${GREEN_COLOR}将更新到最新正式版: $VERSION_TAG${RES}"
                 else
-                    VERSION_TAG="beta"
-                    echo -e "${YELLOW_COLOR}未获取到正式版，使用 beta${RES}"
+                    VERSION_TAG="latest"
+                    echo -e "${YELLOW_COLOR}未获取到正式版，使用 latest${RES}"
                 fi
                 break
                 ;;
             2)
-                VERSION_TAG="beta"
-                echo -e "${GREEN_COLOR}将更新到开发版: beta${RES}"
+                VERSION_TAG="latest"
+                echo -e "${GREEN_COLOR}将更新到开发版: latest${RES}"
                 break
                 ;;
             3)
@@ -1843,7 +1843,7 @@ status_openlist_docker() {
     echo -e "${BLUE_COLOR}所有 OpenList 相关容器状态：${RES}"
     local found=0
     docker ps -a --format '状态: {{.Status}}  名称: {{.Names}}  镜像: {{.Image}}  端口: {{.Ports}}  创建时间: {{.CreatedAt}}' | \
-    grep -E 'ghcr.io/openlistteam/openlist-git:(beta|beta-ffmpeg|beta-aio|beta-aria2)' && found=1
+    grep -E 'ghcr.io/openlistteam/openlist-git:(latest|latest-ffmpeg|latest-aio|latest-aria2)' && found=1
     if [ $found -eq 0 ]; then
         echo -e "${YELLOW_COLOR}未找到任何 OpenList 官方镜像容器${RES}"
     fi
@@ -1877,7 +1877,7 @@ is_docker_installed() {
 
 # 检查 OpenList Docker 容器是否已安装
 is_openlist_docker_installed() {
-    local count=$(docker ps -a --format '{{.Image}}' 2>/dev/null | grep -E 'ghcr.io/openlistteam/openlist-git:(beta|beta-ffmpeg|beta-aio|beta-aria2)' | wc -l)
+    local count=$(docker ps -a --format '{{.Image}}' 2>/dev/null | grep -E 'ghcr.io/openlistteam/openlist-git:(latest|latest-ffmpeg|latest-aio|latest-aria2)' | wc -l)
     if [ "$count" -gt 0 ]; then
         echo -e "${GREEN_COLOR}OpenList Docker 容器已安装${RES}"
         return 0
@@ -2143,9 +2143,9 @@ non_interactive_update() {
             log_debug "版本格式无效: $latest_release，跳过更新"
             return 1
         fi
-        local current_version="beta"
+        local current_version="latest"
         if [ -f "$VERSION_FILE" ]; then
-            current_version=$(head -n1 "$VERSION_FILE" 2>/dev/null || echo "beta")
+            current_version=$(head -n1 "$VERSION_FILE" 2>/dev/null || echo "latest")
         fi
         log_debug "当前本地二进制文件版本: $current_version"
         local api_version
@@ -2237,13 +2237,13 @@ non_interactive_update() {
             return 1
         fi
         log_debug "开始自动更新 Docker 容器"
-        docker pull ghcr.io/openlistteam/openlist-git:beta
+        docker pull ghcr.io/openlistteam/openlist-git:latest
         log_debug "已拉取镜像，返回码: $?"
         docker stop "$cname"
         log_debug "已停止容器，返回码: $?"
         docker rm "$cname"
         log_debug "已删除容器，返回码: $?"
-        docker run -d --name openlist -p 5244:5244 --restart unless-stopped ghcr.io/openlistteam/openlist-git:beta
+        docker run -d --name openlist -p 5244:5244 --restart unless-stopped ghcr.io/openlistteam/openlist-git:latest
         log_debug "已创建新容器，返回码: $?"
         log_debug "Docker 自动更新成功"
         return 0
@@ -2403,7 +2403,7 @@ default_read() {
 # 以 select_version 为例
 select_version() {
     echo -e "${PURPLE_COLOR}请选择要使用的版本：${RES}"
-    echo -e "${GREEN_COLOR}1${RES} - beta (推荐，最新功能)"
+    echo -e "${GREEN_COLOR}1${RES} - latest (推荐，最新功能)"
     echo -e "${GREEN_COLOR}2${RES} - 查看所有可用版本"
     echo -e "${GREEN_COLOR}3${RES} - 手动输入版本标签"
     echo -e "${GREEN_COLOR}4${RES} - 返回主菜单"
@@ -2413,8 +2413,8 @@ select_version() {
         version_choice=$(default_read "请输入选项 [1-4] (默认1): " "1")
         case "$version_choice" in
             1)
-                VERSION_TAG="beta"
-                echo -e "${GREEN_COLOR}已选择 beta 版本${RES}"
+                VERSION_TAG="latest"
+                echo -e "${GREEN_COLOR}已选择 latest 版本${RES}"
                 break
                 ;;
             2)
@@ -2422,29 +2422,29 @@ select_version() {
                 if get_available_versions; then
                     echo
                     local custom_version
-                    custom_version=$(default_read "请输入要使用的版本标签 (默认beta): " "beta")
+                    custom_version=$(default_read "请输入要使用的版本标签 (默认latest): " "latest")
                     if [ ! -z "$custom_version" ]; then
                         VERSION_TAG="$custom_version"
                         echo -e "${GREEN_COLOR}已选择版本：$VERSION_TAG${RES}"
                     else
-                        VERSION_TAG="beta"
-                        echo -e "${YELLOW_COLOR}输入为空，使用 beta 版本${RES}"
+                        VERSION_TAG="latest"
+                        echo -e "${YELLOW_COLOR}输入为空，使用 latest 版本${RES}"
                     fi
                 else
-                    VERSION_TAG="beta"
-                    echo -e "${YELLOW_COLOR}获取版本失败，使用 beta 版本${RES}"
+                    VERSION_TAG="latest"
+                    echo -e "${YELLOW_COLOR}获取版本失败，使用 latest 版本${RES}"
                 fi
                 break
                 ;;
             3)
                 local custom_version
-                custom_version=$(default_read "请输入版本标签 (如: beta, v1.0.0，默认beta): " "beta")
+                custom_version=$(default_read "请输入版本标签 (如: latest, v1.0.0，默认latest): " "latest")
                 if [ ! -z "$custom_version" ]; then
                     VERSION_TAG="$custom_version"
                     echo -e "${GREEN_COLOR}已选择版本：$VERSION_TAG${RES}"
                 else
-                    VERSION_TAG="beta"
-                    echo -e "${YELLOW_COLOR}输入为空，使用 beta 版本${RES}"
+                    VERSION_TAG="latest"
+                    echo -e "${YELLOW_COLOR}输入为空，使用 latest 版本${RES}"
                 fi
                 break
                 ;;
