@@ -7,7 +7,7 @@
 ### Linux / macOS / WSL
 
 ```bash
-sudo curl -fsSL "https://raw.githubusercontent.com/ypq123456789/openlist-manger/refs/heads/main/openlist.sh" -o /usr/local/bin/openlist && sudo chmod +x /usr/local/bin/openlist && openlist
+sudo curl -fsSL "https://raw.githubusercontent.com/0x4E50/openlist-manger/refs/heads/main/openlist.sh" -o /usr/local/bin/openlist && sudo chmod +x /usr/local/bin/openlist && openlist
 ```
 
 > 如遇 `/usr/local/bin` 不存在，可先执行：`sudo mkdir -p /usr/local/bin`
@@ -15,7 +15,7 @@ sudo curl -fsSL "https://raw.githubusercontent.com/ypq123456789/openlist-manger/
 ### Android Termux
 
 ```bash
-curl -fsSL "https://raw.githubusercontent.com/ypq123456789/openlist-manger/refs/heads/main/openlist.sh" -o $PREFIX/bin/openlist && chmod +x $PREFIX/bin/openlist && openlist
+curl -fsSL "https://raw.githubusercontent.com/0x4E50/openlist-manger/refs/heads/main/openlist.sh" -o $PREFIX/bin/openlist && chmod +x $PREFIX/bin/openlist && openlist
 ```
 
 > Windows 用户请在 WSL 环境下使用本脚本，原生 Windows 不支持 Bash 脚本。
